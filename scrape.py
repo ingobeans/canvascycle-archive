@@ -44,6 +44,14 @@ ids = [
 
 base_url = "https://www.effectgames.com/demos/canvascycle"
 
+def create_dir(path:str):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+create_dir("scraped/")
+create_dir("scraped/images")
+create_dir("scraped/audio")
+
 image_count = 0
 audio_count = 0
 
