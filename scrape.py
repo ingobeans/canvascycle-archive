@@ -1,4 +1,4 @@
-import requests
+import requests, os
 
 # script to scrape the data for all images from 
 # https://www.effectgames.com/demos/canvascycle
@@ -44,26 +44,34 @@ ids = [
 
 base_url = "https://www.effectgames.com/demos/canvascycle"
 
-fetch_image = True
-fetch_audio = True
+image_count = 0
+audio_count = 0
 
 def fetch_id(id:str):
+    global image_count, audio_count
+    image_path = f"scraped/images/{id}.LBM.json"
+    audio_path = f"scraped/audio/{id}.ogg"
+    fetch_image = not os.path.exists(image_path)
+    fetch_audio = not os.path.exists(audio_path)
+
     if fetch_image:
         filename = id+".LBM.json"
         url = base_url+"/images/"+filename
         response = requests.get(url)
-        with open(f"scraped/images/{filename}","wb") as f:
+        with open(image_path,"wb") as f:
             f.write(response.content)
         print(f"{id}: fetched image !")
+        image_count += 1
     if fetch_audio:
         filename = id+".ogg"
         url = base_url+"/audio/"+filename
         response = requests.get(url)
-        with open(f"scraped/audio/{filename}","wb") as f:
+        with open(audio_path,"wb") as f:
             f.write(response.content)
         print(f"{id}: fetched audio !")
+        audio_count += 1
 
 for id in ids:
     fetch_id(id)
 
-print("all done!")
+print(f"all done! fetched {image_count} images and {audio_count} audio files")
